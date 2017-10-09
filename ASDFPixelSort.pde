@@ -12,19 +12,19 @@
  
  */
 
-int mode = 1;
+int mode = 2;
 
 // image path is relative to sketch directory
 PImage img;
-String imgFileName = "MyImage";
-String fileType = "png";
+String imgFileName = "mountains";
+String fileType = "jpg";
 
-int loops = 1;
+int loops = 500;
 
 // threshold values to determine sorting start and end pixels
-int blackValue = -16000000;
-int brightnessValue = 60;
-int whiteValue = -13000000;
+int blackValue = 0;
+int brightnessValue = 255;
+int whiteValue = -1000000000;
 
 int row = 0;
 int column = 0;
@@ -46,33 +46,46 @@ void setup() {
 }
 
 
+
 void draw() {
-  
+
   // loop through columns
+  //comment out for horizontal only
+  
   while(column < img.width-1) {
     println("Sorting Column " + column);
     img.loadPixels(); 
     sortColumn();
     column++;
     img.updatePixels();
+    
   }
   
+
   // loop through rows
-  while(row < img.height-1) {
-    println("Sorting Row " + column);
-    img.loadPixels(); 
-    sortRow();
-    row++;
-    img.updatePixels();
-  }
+  //comment out for vertical only
+  
+  // while(row < img.height-1) {
+  //   println("Sorting Row " + column);
+  //   img.loadPixels(); 
+  //   sortRow();
+  //   row++;
+  //   img.updatePixels();
+  // }
   
   // load updated image onto surface and scale to fit the display width,height
   image(img, 0, 0, width, height);
-  
+  blackValue-=1000;
+  whiteValue+=1000;
+  brightnessValue-=1;
+  println("frameCount: "+frameCount);
+
+  //Saves the frame
+  saveFrame("frames/"+imgFileName+"_#####.png");
   if(!saved && frameCount >= loops) {
     
 	// save img
-    img.save(imgFileName+"_"+mode+".png");
+    // img.save(imgFileName+"_"+mode+".png");
 	
     saved = true;
     println("Saved "+frameCount+" Frame(s)");
@@ -80,21 +93,23 @@ void draw() {
     // exiting here can interrupt file save, wait for user to trigger exit
     println("Click or press any key to exit...");
   }
+  row = 0;
+  column = 0;
 }
 
-void keyPressed() {
-  if(saved)
-  {
-    System.exit(0);
-  }
-}
+// void keyPressed() {
+//   if(saved)
+//   {
+//     System.exit(0);
+//   }
+// }
 
-void mouseClicked() {
-  if(saved)
-  {
-    System.exit(0);
-  }
-}
+// void mouseClicked() {
+//   if(saved)
+//   {
+//     System.exit(0);
+//   }
+// }
 
 void sortRow() {
   // current row
